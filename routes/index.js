@@ -4,7 +4,7 @@ const Posts = require("../data/db");
 router.get("/", (req, res) => {
   Posts.find()
     .then(posts => {
-      res.status(200).json(posts);
+      res.status(200).json({posts});
     })
     .catch(() =>
       res.status(500).send({ errorMessage: "Error Accessing Posts" })
@@ -19,7 +19,7 @@ router.post("/", (req, res) => {
   } else {
     Posts.insert({ title: title, contents: contents })
       .then(post => {
-        res.status(201).json(post);
+        res.status(201).json({post});
       })
       .catch(() =>
         res.status(500).send({ errorMessage: "Error Creating Post" })
@@ -29,7 +29,7 @@ router.post("/", (req, res) => {
 router.get("/:id", (req, res) => {
   Posts.findById(req.params.id)
     .then(post => {
-      res.status(200).json(post);
+      res.status(200).json({post});
     })
     .catch(() => res.status(500).send({ errorMessage: "Error Finding Post" }));
 });
@@ -40,7 +40,7 @@ router.put("/:id", (req, res) => {
   } else {
     Posts.update(req.params.id, { title: title, contents: contents })
       .then(post => {
-        res.status(202).json(post);
+        res.status(202).json({post});
       })
       .catch(() =>
         res.status(500).send({ errorMessage: "Error Updating Post" })
@@ -50,14 +50,14 @@ router.put("/:id", (req, res) => {
 router.delete("/:id", (req, res) => {
   Posts.remove(req.params.id)
     .then(post => {
-      res.status(202).json(post);
+      res.status(202).json({post});
     })
     .catch(() => res.status(500).send({ errorMessage: "Error Removing Post" }));
 });
 router.get("/:postId/comments", (req, res) => {
   Posts.findPostComments(req.params.postId)
     .then(posts => {
-      res.status(200).json(posts);
+      res.status(200).json({posts});
     })
     .catch(() =>
       res.status(500).send({ errorMessage: "Error Accessing Comments" })
@@ -72,7 +72,7 @@ router.post("/:postId/comments/", (req, res) => {
   } else {
     Posts.insertComment({ text: text, post_id: req.params.postId })
       .then(comment => {
-        res.status(201).json(comment);
+        res.status(201).json({comment});
       })
       .catch(() =>
         res.status(500).send({ errorMessage: "Error Creating Comment" })
@@ -82,7 +82,7 @@ router.post("/:postId/comments/", (req, res) => {
 router.get("/:postId/comments/:commentId", (req, res) => {
   Posts.findCommentById(req.params.commentId)
     .then(posts => {
-      res.status(200).json(posts);
+      res.status(200).json({posts});
     })
     .catch(() =>
       res.status(500).send({ errorMessage: "Error Accessing Comments" })

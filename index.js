@@ -1,7 +1,9 @@
 const express = require("express"),
   server = express(),
-  routes = require("./routes");
+  routes = require("./routes"),
+  cors = require("cors");
 server.use(express.json());
+server.use(cors());
 server.use("/api/posts", routes);
 server.use("/", (req, res) => {
   res.send("API is running");
