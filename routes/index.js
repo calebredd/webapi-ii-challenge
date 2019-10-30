@@ -10,6 +10,50 @@ router.get("/", (req, res) => {
       res.status(500).send({ errorMessage: "Error Accessing Posts" })
     );
 });
+router.post("/", (req, res) => {
+  const { title, contents } = req.body;
+  // console.log(title);
+  // console.log(contents);
+  if (!title || !contents) {
+    res.status(400).send("Unable to Post at this Time.");
+  } else {
+    Posts.insert({ title: title, contents: contents })
+      .then(post => {
+        res.status(201).json(post);
+      })
+      .catch(() =>
+        res.status(500).send({ errorMessage: "Error Creating Post" })
+      );
+  }
+});
+router.get("/:id", (req, res) => {
+  Posts.findById(req.params.id)
+    .then(post => {
+      res.status(200).json(post);
+    })
+    .catch(() => res.status(500).send({ errorMessage: "Error Finding Post" }));
+});
+router.put("/:id", (req, res) => {
+  const { title, contents } = req.body;
+  if (!title && !contents) {
+    res.status(400).send("New Title and/or Contents not found");
+  } else {
+    Posts.update(req.params.id, { title: title, contents: contents })
+      .then(post => {
+        res.status(202).json(post);
+      })
+      .catch(() =>
+        res.status(500).send({ errorMessage: "Error Updating Post" })
+      );
+  }
+});
+router.delete("/:id", (req, res) => {
+  Posts.remove(req.params.id)
+    .then(post => {
+      res.status(202).json(post);
+    })
+    .catch(() => res.status(500).send({ errorMessage: "Error Removing Post" }));
+});
 router.get("/:postId/comments", (req, res) => {
   Posts.findPostComments(req.params.postId)
     .then(posts => {
@@ -19,6 +63,22 @@ router.get("/:postId/comments", (req, res) => {
       res.status(500).send({ errorMessage: "Error Accessing Comments" })
     );
 });
+router.post("/:postId/comments/", (req, res) => {
+  const { text } = req.body;
+  if (!text) {
+    res.status(400).send("You must add text for your comment.");
+  } else if (!req.params.postId) {
+    res.status(400).send("No Post selected to comment on in the URL");
+  } else {
+    Posts.insertComment({ text: text, post_id: req.params.postId })
+      .then(comment => {
+        res.status(201).json(comment);
+      })
+      .catch(() =>
+        res.status(500).send({ errorMessage: "Error Creating Comment" })
+      );
+  }
+});
 router.get("/:postId/comments/:commentId", (req, res) => {
   Posts.findCommentById(req.params.commentId)
     .then(posts => {
@@ -27,50 +87,6 @@ router.get("/:postId/comments/:commentId", (req, res) => {
     .catch(() =>
       res.status(500).send({ errorMessage: "Error Accessing Comments" })
     );
-});
-router.get("/:id", (req, res) => {
-  Posts.findById(req.params.id)
-    .then(post => {
-      res.status(200).json(post);
-    })
-    .catch(() => res.status(500).send({ errorMessage: "Error Finding Post" }));
-});
-router.post("/", (req, res) => {
-  // const newPost={title:"New Post",contents:"Guess who said this"}
-  const newPost = { title: req.body.title, contents: req.body.contents };
-  Posts.insert(newPost)
-    .then(post => {
-      res.status(201).json(post);
-    })
-    .catch(() => res.status(500).send({ errorMessage: "Error Creating Post" }));
-});
-router.post("/:postId/comments/", (req, res) => {
-  // const newPost={title:"New Post",contents:"Guess who said this"}
-  const newComment = { text: req.body.text, post_id: req.params.postId };
-  Posts.insert(newComment)
-    .then(comment => {
-      res.status(201).json(comment);
-    })
-    .catch(() =>
-      res.status(500).send({ errorMessage: "Error Creating Comment" })
-    );
-});
-router.put("/:id", (req, res) => {
-  // const newPost={title:"New Post",contents:"Guess who said this"}
-  const editPost = { title: req.body.title, contents: req.body.contents };
-  Posts.update(req.params.id, editPost)
-    .then(post => {
-      res.status(202).json(post);
-    })
-    .catch(() => res.status(500).send({ errorMessage: "Error Updating Post" }));
-});
-router.delete("/:id", (req, res) => {
-  // const newPost={title:"New Post",contents:"Guess who said this"}
-  Posts.remove(req.params.id)
-    .then(post => {
-      res.status(202).json(post);
-    })
-    .catch(() => res.status(500).send({ errorMessage: "Error Removing Post" }));
 });
 
 module.exports = router;

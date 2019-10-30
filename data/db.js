@@ -46,7 +46,7 @@ function findPostComments(postId) {
     .where('post_id', postId);
 }
 
-function findCommentById(postId, commentId) {
+function findCommentById(commentId) {
   return db('comments')
     .join('posts', 'posts.id', 'post_id')
     .select('comments.*', 'title as post')
