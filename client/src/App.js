@@ -13,10 +13,32 @@ function App() {
       })
       .catch(err => console.log(err));
   }, []);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    console.log(e.target.title.value);
+    console.log(e.target.contents.value);
+    axios
+      .post(`http://localhost:9000/api/posts`, {
+        title: e.target.title.value,
+        contents: e.target.contents.value
+      })
+      .then(res => {
+        console.log(res.data);
+        window.location.reload();
+      })
+      .catch(err => console.error(err));
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <h1>API Post/Blog Access</h1>
+        <form onSubmit={handleSubmit} className="addPost">
+          <input type="text" name="title" placeholder="Blog Title" />
+          <textarea type="text" name="contents" placeholder="Blog Content" />
+          <button type="submit">Add Blog Post</button>
+        </form>
       </header>
       <Posts posts={posts} />
     </div>
