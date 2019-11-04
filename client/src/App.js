@@ -28,6 +28,7 @@ function App() {
         setPosts(res.data);
       })
       .catch(err => console.error(err));
+    e.target.reset();
   };
 
   return (
