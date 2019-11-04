@@ -1,14 +1,14 @@
 import React from "react";
 import axios from "axios";
 export default function Posts(props) {
-  const posts = props.posts;
+  const { posts, setPosts } = props;
   const remove = post => {
     console.log(post);
     axios
       .delete(`http://localhost:9000/api/posts/${post.id}`)
       .then(res => {
         console.log(res.data);
-        window.location.reload();
+        setPosts(res.data);
       })
       .catch(err => console.error(err));
   };

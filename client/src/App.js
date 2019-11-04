@@ -16,16 +16,16 @@ function App() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(e.target.title.value);
-    console.log(e.target.contents.value);
+    // console.log(e.target.title.value);
+    // console.log(e.target.contents.value);
     axios
       .post(`http://localhost:9000/api/posts`, {
         title: e.target.title.value,
         contents: e.target.contents.value
       })
       .then(res => {
-        console.log(res.data);
-        window.location.reload();
+        // console.log(res.data);
+        setPosts(res.data);
       })
       .catch(err => console.error(err));
   };
@@ -40,7 +40,7 @@ function App() {
           <button type="submit">Add Blog Post</button>
         </form>
       </header>
-      <Posts posts={posts} />
+      <Posts posts={posts} setPosts={setPosts} />
     </div>
   );
 }
