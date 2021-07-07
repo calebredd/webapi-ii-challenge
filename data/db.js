@@ -46,11 +46,11 @@ function findPostComments(postId) {
     .where('post_id', postId);
 }
 
-function findCommentById(id) {
+function findCommentById(commentId) {
   return db('comments')
     .join('posts', 'posts.id', 'post_id')
     .select('comments.*', 'title as post')
-    .where('comments.id', id);
+    .where('comments.id', commentId);
 }
 
 function insertComment(comment) {
